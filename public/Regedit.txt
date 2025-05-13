@@ -1,0 +1,7 @@
+Computer\HKEY_LOCAL_MACHINE\SOFTWARE\Google\Chrome
+
+Value Name: DisablePrintPreview
+Value: 1
+
+C:\Windows\System32\drivers\etc\hosts
+10.0.5.15  acedumaguetedoctors.com

@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Queue System</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      overflow: hidden;
+      height: 100%;
+      width: 100%;
+      font-family: Arial, sans-serif;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: rgb(0, 0, 0);
+      padding: 10px 30px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+    }
+
+    .header-left img {
+      height: 60px;
+      margin-right: 15px;
+    }
+
+    .header-left .text {
+      color: black;
+    }
+
+    .header-left .text .name {
+      font-weight: bold;
+      font-size: 24px;
+    }
+
+    .header-left .text .address {
+      font-size: 16px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      color: #333;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .header-right img {
+      height: 20px;
+      margin-right: 8px;
+    }
+
+    .container {
+      max-width: 1366px;
+      margin: 0 auto;
+      padding: 30px 20px;
+      background-color: rgb(0, 0, 0);
+      border-radius: 20px;
+      height: calc(100vh - 100px);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+    }
+
+    h1 {
+      font-size: 80px;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      color: #1a73e8;
+    }
+
+    p {
+      font-size: 30px;
+      margin-bottom: 30px;
+      color: #ffffff;
+    }
+
+    .grid {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .grid button {
+      padding: 60px 40px;
+      font-size: 60px;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      border-radius: 20px;
+      background-color: #1a73e8;
+      color: white;
+      min-width: 280px;
+      min-height: 200px;
+      transition: transform 0.2s;
+    }
+
+    .grid button:hover {
+      transform: scale(1.05);
+    }
+
+    #queueNumber {
+      font-size: 24px;
+      margin-top: 40px;
+      display: none;
+      background-color: #e8f0fe;
+      padding: 30px;
+      border-radius: 12px;
+    }
+
+    .error {
+      color: red;
+      margin-top: 20px;
+      font-size: 20px;
+    }
+
+    footer {
+      padding: 20px;
+      background-color: #fdfdfd;
+      text-align: center;
+      font-size: 18px;
+      color: #1a73e8;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-left">
+      <img src="/logo.png" alt="Logo">
+      <div class="text">
+        <div class="name">ACE Dumaguete Doctors Inc.</div>
+        <div class="address">F. Cimafranca St., Daro, Dumaguete City</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <img src="https://img.icons8.com/color/48/000000/alarm.png" alt="Clock">
+      <span id="clock"></span>
+    </div>
+  </div>
+
+  <div class="container">
+    <h1>Welcome to the LabQue System</h1>
+    <p>Tap a service below to get your queue number.</p>
+    <div class="grid" id="counters">
+      <button onclick="getQueueNumber('Charging')">Charging</button>
+      <button onclick="getQueueNumber('Releasing')">Releasing</button>
+      <button onclick="getQueueNumber('Extraction')">Extraction</button>
+    </div>
+    <div id="queueNumber"></div>
+    <div class="error" id="error-message"></div>
+  </div>
+
+  <footer>
+    <footer>
+        <p>© 2025 HIMS Department. All rights reserved.</p>
+        <p>Contact Us <p/>
+            <p>For questions or concerns about this LabQue System, you may contact:</p>
+            <p>Telephone #: Local 800</p>
+            <p>Developed by EnoGPT</p>
+      </footer>
+  </footer>
+
+  <script>
+    function updateClock() {
+      const clockEl = document.getElementById("clock");
+      const now = new Date();
+      const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
+      const time = now.toLocaleTimeString();
+      const date = now.toLocaleDateString(undefined, options);
+      clockEl.textContent = `${date} | ${time}`;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+
+    function printQueueNumber(number, service) {
+      try {
+        const printWindow = window.open('', '', 'width=600,height=400');
+        if (!printWindow) throw new Error("Pop-up blocked! Allow pop-ups for automatic printing.");
+
+        printWindow.document.write(`
+          <html>
+          <head>
+            <title>Queue Number</title>
+            <style>
+              body { text-align: center; font-family: Arial, sans-serif; }
+              h1 { font-size: 12px; }
+              h2 { font-size: 140px; color: #1a73e8; margin-top: -20px; }
+              p { font-size: 10px; margin-top: -140px; }
+            </style>
+          </head>
+          <body>
+            <h1>ACE DUMAGUETE DOCTORS INC.</h1>
+            <h2>${number}</h2>
+            <p>Proceed to <strong>${service}</strong> counter if your number is called.</p>
+            <script>
+              window.onload = function() {
+                window.print();
+                setTimeout(() => window.close(), 1000);
+              };
+            <\/script>
+          </body>
+          </html>
+        `);
+        printWindow.document.close();
+      } catch (error) {
+        document.getElementById("error-message").textContent = "Printing error: " + error.message;
+      }
+    }
+
+    async function getQueueNumber(service) {
+      document.getElementById("error-message").textContent = "";
+      try {
+        const response = await fetch('http://10.0.5.24:3000/queue', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ service })
+        });
+
+        if (!response.ok) throw new Error(`Network error: ${response.statusText}`);
+
+        const data = await response.json();
+        if (!data.number) throw new Error('Could not fetch queue number.');
+
+        document.getElementById("queueNumber").style.display = 'block';
+        document.getElementById("queueNumber").innerHTML = `Your queue number for ${service} is: <strong>${data.number}</strong>`;
+
+      
+        printQueueNumber(data.number, service);
+      } catch (error) {
+        document.getElementById("error-message").textContent = "Error: " + error.message;
+      }
+    }
+
+    document.addEventListener('contextmenu', function(e) {
+      e.preventDefault();
+    });
+
+    // Disable zooming
+    document.addEventListener('wheel', function(e) {
+      if (e.ctrlKey) e.preventDefault();
+    }, { passive: false });
+
+    document.addEventListener('keydown', function(e) {
+      if ((e.ctrlKey || e.metaKey) && (e.key === '+' || e.key === '-' || e.key === '=')) {
+        e.preventDefault();
+      }
+    });
+
+    document.addEventListener('touchstart', function(e) {
+      if (e.touches.length > 1) e.preventDefault();
+    }, { passive: false });
+
+    let lastTouchEnd = 0;
+    document.addEventListener('touchend', function(e) {
+      const now = new Date().getTime();
+      if (now - lastTouchEnd <= 300) e.preventDefault();
+      lastTouchEnd = now;
+    }, false);
+  </script>
+</body>
+</html>
